@@ -37,12 +37,20 @@ class AuthService {
     }
   }
 
-  Future<bool> forgotPassword(String email) async {
+  Future<bool> forgotPassword(String email, String newPassword) async {
     try {
-      final response = await _dio.post("/forgot-password", data: {"email": email});
+      final response = await _dio.post("/forgot-password", data: {
+        "email": email,
+        "newPassword": newPassword,
+      });
       return response.statusCode == 200;
     } catch (e) {
       print("Forgot password error: $e");
+      if (e is DioException && e.response != null) {
+        lastErrorMessage = e.response!.data.toString();
+      } else {
+        lastErrorMessage = e.toString();
+      }
       return false;
     }
   }

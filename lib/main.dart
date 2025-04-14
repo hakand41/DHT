@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'features/auth/screens/login_page.dart';
 import 'features/auth/screens/register_page.dart';
 import 'features/auth/screens/forgot_password_page.dart';
-// import 'features/home/screens/home_page.dart'; // şimdilik dummy
-
+// Diğer ekranlar dummy olarak eklenebilir:
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -20,9 +19,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(), // şimdilik dummy
-        '/forgot-password': (context) => const Scaffold(body: Center(child: Text("ForgotPasswordPage"))), // dummy
-        '/home': (context) => const Scaffold(body: Center(child: Text("HomePage"))), // dummy
+        '/register': (context) => const RegisterPage(),
+        '/forgot-password': (context) => const ForgotPasswordPage(),
+        '/home': (context) => const Scaffold(body: Center(child: Text("HomePage"))),
       },
     );
   }
