@@ -98,13 +98,16 @@ class _RegisterPageState extends State<RegisterPage> {
               if (_errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
               TextFormField(
                 controller: _fullNameController,
                 decoration: const InputDecoration(labelText: "Ad Soyad"),
                 validator: (value) =>
-                value!.isEmpty ? "Ad soyad giriniz" : null,
+                value == null || value.isEmpty ? "Ad soyad giriniz" : null,
               ),
               TextFormField(
                 controller: _emailController,
@@ -128,8 +131,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   if (value == null || value.isEmpty) {
                     return "Parola giriniz";
                   }
-                  if (value.length < 8) {
-                    return "Parola en az 8 karakter olmalı";
+                  // Parola en az 8 karakter, en az bir büyük harf, bir küçük harf ve bir rakam içermeli
+                  final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$');
+                  if (!passwordRegex.hasMatch(value)) {
+                    return "Parola en az 8 karakter, büyük harf, küçük harf ve rakam içermelidir";
                   }
                   return null;
                 },
@@ -139,6 +144,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
                 decoration: const InputDecoration(labelText: "Parola Tekrar"),
                 validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Parola tekrarını giriniz";
+                  }
                   if (value != _passwordController.text) {
                     return "Parolalar eşleşmiyor";
                   }
