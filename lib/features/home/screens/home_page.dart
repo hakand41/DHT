@@ -15,26 +15,31 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Profilden kullanıcı adı almak için
     final profileAsync = ref.watch(userProfileProvider);
-    final recsAsync    = ref.watch(healthRecordsProvider);
-    final sugAsync     = ref.watch(randomSuggestionProvider);
+    final recsAsync = ref.watch(healthRecordsProvider);
+    final sugAsync = ref.watch(randomSuggestionProvider);
 
     return profileAsync.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error:   (e, _) => Scaffold(body: Center(child: Text('Profil hatası: $e'))),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(body: Center(child: Text('Profil hatası: $e'))),
       data: (user) => recsAsync.when(
-        loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-        error:   (e, _) => Scaffold(body: Center(child: Text('Kayıt hatası: $e'))),
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (e, _) =>
+            Scaffold(body: Center(child: Text('Kayıt hatası: $e'))),
         data: (recs) => sugAsync.when(
-          loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-          error:   (e, _) => Scaffold(body: Center(child: Text('Öneri hatası: $e'))),
+          loading: () =>
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
+          error: (e, _) =>
+              Scaffold(body: Center(child: Text('Öneri hatası: $e'))),
           data: (sug) {
-            final total     = recs.length;
+            final total = recs.length;
             final completed = recs.where((r) => r.isCompleted).length;
-            final pending   = total - completed;
+            final pending = total - completed;
 
             return Scaffold(
               appBar: AppBar(
-                title: Text('Merhaba, ${user.fullName}'), // kullanıcı adı eklendi
+                title: Text('Merhaba, ${user.fullName}'), // kullanıcı adı
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.refresh),
@@ -50,7 +55,8 @@ class HomePage extends ConsumerWidget {
                     tooltip: 'Çıkış Yap',
                     onPressed: () async {
                       await ref.read(authServiceProvider).logout();
-                      Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (_) => false);
                     },
                   ),
                 ],
@@ -65,20 +71,23 @@ class HomePage extends ConsumerWidget {
                         TextButton.icon(
                           icon: const Icon(Icons.person),
                           label: const Text('Profil'),
-                          onPressed: () => Navigator.pushNamed(context, '/profile'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/profile'),
                         ),
                         const SizedBox(width: 8),
                         TextButton.icon(
                           icon: const Icon(Icons.health_and_safety),
                           label: const Text('Ağız & Diş'),
-                          onPressed: () => Navigator.pushNamed(context, '/oral-health'),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/oral-health'),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     const Text(
                       'Son 7 Gün Özeti',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     SizedBox(
@@ -87,9 +96,10 @@ class HomePage extends ConsumerWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            _SummaryCard(label: 'Toplam',     value: '$total'),
-                            _SummaryCard(label: 'Tamamlandı', value: '$completed'),
-                            _SummaryCard(label: 'Bekleyen',   value: '$pending'),
+                            _SummaryCard(label: 'Toplam', value: '$total'),
+                            _SummaryCard(
+                                label: 'Tamamlandı', value: '$completed'),
+                            _SummaryCard(label: 'Bekleyen', value: '$pending'),
                           ],
                         ),
                       ),
@@ -104,7 +114,8 @@ class HomePage extends ConsumerWidget {
                           children: [
                             const Text(
                               'Öneri',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             Text(sug.content, textAlign: TextAlign.center),
@@ -112,7 +123,8 @@ class HomePage extends ConsumerWidget {
                             ElevatedButton.icon(
                               icon: const Icon(Icons.refresh),
                               label: const Text('Yeni Öneri'),
-                              onPressed: () => ref.refresh(randomSuggestionProvider),
+                              onPressed: () =>
+                                  ref.refresh(randomSuggestionProvider),
                             ),
                           ],
                         ),
@@ -137,8 +149,7 @@ class _SummaryCard extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      Card(
+  Widget build(BuildContext context) => Card(
         margin: const EdgeInsets.only(right: 8),
         child: SizedBox(
           width: 100,
@@ -147,8 +158,8 @@ class _SummaryCard extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                    label, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(label,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Text(value, style: const TextStyle(fontSize: 20)),
               ],
