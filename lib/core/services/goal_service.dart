@@ -8,9 +8,7 @@ class GoalService extends BaseService {
 
   Future<List<Goal>> fetchMyGoals() async {
     final resp = await dio.get('/my-goals');
-    return (resp.data as List)
-        .map((j) => Goal.fromJson(j))
-        .toList();
+    return (resp.data as List).map((j) => Goal.fromJson(j)).toList();
   }
 
   Future<Goal> addGoal(Goal g) async {
@@ -24,14 +22,11 @@ class GoalService extends BaseService {
     return Goal.fromJson(resp.data);
   }
 
-
   Future<bool> deleteGoal(int id, {bool force = false}) async {
     final resp = await dio.delete(
       '/delete/$id',
-      // force her ne olursa olsun bu sorgu parametresini gönderiyoruz
       queryParameters: {'forceDelete': force},
     );
     return resp.statusCode == 200;
   }
-
 }
